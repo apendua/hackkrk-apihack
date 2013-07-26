@@ -13,12 +13,17 @@ def make_request(url, data=None):
 		response = urlopen( urlparse.urljoin(prefix, url) )
 
 	result = json.loads(response.read().decode('utf-8'))
+	
+	print url
 	print response.code, result
 
-	return result
+	try:
+		return result['id']
+	except KeyError:
+		return None
 
-result = make_request("/nodes", {"kind":"constant","type":"int","value":371})
-result = make_request("/nodes", {"kind":"constant","type":"int","value":121})
-result = make_request("/functions/builtin/add")
-
-#result = make_request("/nodes/%i" % result["id"])
+id0 = make_request("/nodes", {"kind":"constant","type":"int","value":371})
+id1 = make_request("/nodes", {"kind":"constant","type":"int","value":121})
+id2 = make_request("/functions/builtin/add")
+id3 = make_request("/nodes", {"kind":"invoke","function":id2,"arguments":[id0,id1]})
+make_request("/nodes/%i/evaluate" % id3)
