@@ -31,7 +31,7 @@ def error(message="", status=400):
 	)
 
 def nodes(request, node_id=None):
-	
+
 	if request.method == 'POST' and node_id is None:
 		#TODO: check if node is ok
 		data = json.loads(request.body) # parse POST data
@@ -57,7 +57,16 @@ def nodes(request, node_id=None):
 	return error()
 
 def builtin(request, name):
-	pass
+
+	if request.method == 'GET':
+		if not name in cache:
+			cache[name] = addNode({
+					'kind': 'function',
+					'body': name,
+				})
+		return success({"id": cache[name]})
+
+	return error()
 
 def functions(request, name):
 	pass
