@@ -1,42 +1,19 @@
-from django.http import HttpResponse
-
-import json
 import builtins
+import json
+import db
 
-nodes_db = []
+from helpers import error, success
+
 cache = {}
 
-def addNode(node):
-	node_id = len(nodes_db)
-	nodes_db.append(node.copy())
-	return node_id
-
-def getNode(node_id):
-	try:
-		return nodes_db[node_id]
-	except IndexError:
-		return None
-
-def success(response, status=200):
-	return HttpResponse(
-		content_type = 'application/json',
-		content      = json.dumps(response),
-		status       = status,
-	)
-
-def error(message="", status=400):
-	return HttpResponse(
-		content_type = 'application/json',
-		content      = json.dumps({"error":message}),
-		status       = status,
-	)
+# NODES
 
 def nodes(request, node_id=None):
 
 	if request.method == 'POST' and node_id is None:
 		#TODO: check if node is ok
 		data = json.loads(request.body) # parse POST data
-		data["id"] = addNode(data)
+		data["id"] = db.add(data)
 		return success(data, 201)
 
 	elif request.method == 'GET' and node_id:
@@ -46,7 +23,7 @@ def nodes(request, node_id=None):
 		except ValueError:
 			return error()
 
-		node = getNode(node_id)
+		node = db.get(node_id)
 		if node:
 			return success(node, 200)
 		else:
@@ -61,7 +38,7 @@ def builtin(request, name):
 
 	if request.method == 'GET':
 		if not name in cache:
-			cache[name] = addNode({
+			cache[name] = db.add({
 					'kind': 'function',
 					'body': name,
 				})
@@ -72,8 +49,10 @@ def builtin(request, name):
 def functions(request, name):
 	pass
 
+# EVALUATE
+
 def evalNode(node_id, args):
-	node = getNode(node_id)
+	node = db.get(node_id)
 	if node is None:
 		pass # what shoud we do?
 	kind = node['kind']
