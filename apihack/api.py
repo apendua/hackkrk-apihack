@@ -12,16 +12,15 @@ cache = {}
 def nodes(request, node_id=None):
 
 	if request.method == 'POST' and node_id is None:
-		try:
-			validate.validate(node)
-		except ValueError, e:
-			return error(str(e))
-		
-		# parse POST data
-		data = json.loads(request.body)
-		data["id"] = db.add(data)
+		node = json.loads(request.body) # parse POST data
 
-		return success(data, 201)
+		err = validate.validateNode(node)
+		if err:
+			return error(err, 422)
+
+		node["id"] = db.add(node)
+
+		return success(node, 201)
 
 	elif request.method == 'GET' and node_id:
 
