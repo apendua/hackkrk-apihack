@@ -1,7 +1,7 @@
 from nodes.models import getNode
 import builtins
 
-def evalNode(node_id, args):
+def evalNode(node_id, args=None):
 	node = getNode(node_id)
 	if node is None:
 		pass # what shoud we do?
@@ -9,7 +9,7 @@ def evalNode(node_id, args):
 	if kind == 'constant':
 		return node['value']
 	elif kind == 'invoke':
-		args = [evalNode(i, None) for i in node['arguments']]
+		args = [evalNode(i) for i in node['arguments']]
 		return evalNode(node['function'], args)
 	elif kind == 'argument':
 		#TODO: check if arguments are ok
