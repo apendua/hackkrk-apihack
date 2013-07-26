@@ -5,6 +5,7 @@ import json
 from urllib2 import urlopen
 
 prefix = "http://127.0.0.1:8000"
+#prefix = "http://hackkrk-apihack.lenarcik.org:80"
 
 def make_request(url, data=None):
 	if data:
