@@ -1,3 +1,4 @@
+import validate
 import builtins
 import json
 import db
@@ -11,9 +12,15 @@ cache = {}
 def nodes(request, node_id=None):
 
 	if request.method == 'POST' and node_id is None:
-		#TODO: check if node is ok
-		data = json.loads(request.body) # parse POST data
+		try:
+			validate.validate(node)
+		except ValueError, e:
+			return error(str(e))
+		
+		# parse POST data
+		data = json.loads(request.body)
 		data["id"] = db.add(data)
+
 		return success(data, 201)
 
 	elif request.method == 'GET' and node_id:
