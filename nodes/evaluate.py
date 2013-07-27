@@ -39,42 +39,50 @@ def evalNode(nodeId, args=None):
 		return evalNode(node['false_branch'], args)
 	return None
 
+typeCache = {}
+
+def clearCache():
+	typeCache = {}
+
+def store(nodeId, nodeType):
+	typeCache[nodeId] = nodeType
+	return nodeType
+
 def evalType(node, args=None):
 	# prepare node data
 	if isinstance(node, (int, long)):
 		nodeId = node
-		node   = getNode(node)
+		try:
+			return typeCache[nodeId]
+		except KeyError:
+			pass # not yet in cache
+		node = getNode(node)
 	elif isinstance(node, dict):
 		nodeId = node.get('id', None)
 	else:
 		raise ValueError
 	print "computing type of node:", node
 	# try easy solution ;)
-	if 'type' in node:
-		# also kind == constant goes here
-		return node['type']
+	if 'type' in node: # check if type is given explicitly
+		return store(nodeId, node['type']) # also kind == constant goes here
 	# so we need to compute it :/
 	kind = node['kind']
 	if kind == 'invoke':
-		nodeType = evalType(node['function'],
-			[lazy(i, args) for i in node['arguments']])
-		print "type of invoke result is", nodeType
-		return updateType(nodeId, nodeType)
+		return store(nodeId, evalType(node['function'],
+			[lazy(i, args) for i in node['arguments']]))
 	elif kind == 'builtin':
 		funcName = node['name']
 		# move this logic to builtin module
 		if funcName == 'add' or funcName == 'mult':
-			return 'int'
+			return store(nodeId, 'int')
 		elif funcName == 'lt':
-			return 'bool'
+			return store(nodeId, 'bool')
 		#TODO: if
 	elif kind == 'function':
-		print 'computing function type with args', args
 		if node['body']: # this can be null
 			return evalType(node['body'], args)
-		return None
+		return store(nodeId, None) # abstract function
 	elif kind == 'argument':
-		print args
 		if args: #TODO: check if index is fine
 			return args[node['argument']].evalType()
 		return None
@@ -83,6 +91,6 @@ def evalType(node, args=None):
 		typeFalse = evalType(node['false_branch'], args)
 		if typeTrue != typeFalse:
 			raise TypeError("Type mismatch")
-		return updateType(nodeId, typeTrue)
+		return store(nodeId, typeTrue)
 
 	return None

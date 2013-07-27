@@ -3,7 +3,7 @@ import builtins
 import json
 
 from nodes.models import addNode, getNode, updateNode
-from nodes.evaluate import evalNode, evalType
+from nodes.evaluate import evalNode, evalType, clearCache
 from nodes.helpers import error, success
 
 cache = {}
@@ -17,14 +17,13 @@ def nodes(request, node_id=None):
 		if err:
 			return error(err, 422)
 		try:
+			clearCache()
 			nodeType = evalType(node)
 		except TypeError, err:
-			if err != "Type mismatch":
-				raise err # I don't like this, FIX it!
 			return error("Type mismatch", 422)
-		if nodeType: # can be None
-			node["type"] = nodeType
 		node["id"] = addNode(node)
+		if nodeType: # for now, we don't store node type in db
+			node["type"] = nodeType
 		return success(node, 201)
 	elif request.method == 'GET' and node_id:
 		try:
