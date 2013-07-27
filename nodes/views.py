@@ -2,7 +2,7 @@ import validate
 import builtins
 import json
 
-from nodes.models import addNode, getNode
+from nodes.models import addNode, getNode, updateNode
 from nodes.evaluate import evalNode
 from nodes.helpers import error, success
 
@@ -53,7 +53,14 @@ def functions(request, node_id=None):
 		node['id'] = addNode(node)
 		del node['kind']
 		return success(node, 201)
-	return error()
+	elif request.method == 'PUT' and node_id:
+		data = json.loads(request.body) # parse POST data
+		node = updateNode(node_id, data)
+		if node:
+			return success(data)
+		else:
+			error("")
+	return error("")
 
 # EVALUATE
 

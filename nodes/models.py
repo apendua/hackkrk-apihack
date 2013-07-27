@@ -16,3 +16,14 @@ def getNode(node_id):
 	except Node.DoesNotExist:
 		return None
 	return json.loads(node.json)
+
+def updateNode(node_id, **kwargs):
+	try:
+		node = Node.objects.get(id=node_id)
+	except Node.DoesNotExist:
+		return None
+	data = json.loads(node.json)
+	data.update(kwargs)
+	node.json = json.dumps(data)
+	node.save()
+	return data
