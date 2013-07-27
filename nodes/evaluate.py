@@ -1,5 +1,5 @@
 from nodes.models import getNode
-import builtins
+from nodes.builtins import library
 
 def evalNode(node_id, args=None):
 	node = getNode(node_id)
@@ -15,7 +15,7 @@ def evalNode(node_id, args=None):
 		#TODO: check if arguments are ok
 		return args['argument']
 	elif kind == 'builtin':
-		return getattr(builtins, node['name']).__call__(*args)
+		return library[node['name']].__call__(*args)
 	elif kind == 'function':
 		return evalNode(node['body'], args)
 	elif kind == 'if':
