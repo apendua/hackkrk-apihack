@@ -18,7 +18,9 @@ def nodes(request, node_id=None):
 			return error(err, 422)
 		try:
 			nodeType = evalType(node)
-		except TypeError:
+		except TypeError, err:
+			if err != "Type mismatch":
+				raise err # I don't like this, FIX it!
 			return error("Type mismatch", 422)
 		if nodeType: # can be None
 			node["type"] = nodeType

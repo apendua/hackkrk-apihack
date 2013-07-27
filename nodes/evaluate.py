@@ -69,14 +69,20 @@ def evalType(node, args=None):
 			return 'bool'
 		#TODO: if
 	elif kind == 'function':
-		return evalType(node['body'], args)
+		print 'computing function type with args', args
+		if node['body']: # this can be null
+			return evalType(node['body'], args)
+		return None
 	elif kind == 'argument':
-		return args[node['argument']].evalType()
+		print args
+		if args: #TODO: check if index is fine
+			return args[node['argument']].evalType()
+		return None
 	elif kind == 'if':
 		typeTrue  = evalType(node['true_branch'], args)
 		typeFalse = evalType(node['false_branch'], args)
 		if typeTrue != typeFalse:
-			raise TypeError
+			raise TypeError("Type mismatch")
 		return updateType(nodeId, typeTrue)
 
 	return None
