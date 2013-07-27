@@ -12,7 +12,7 @@ def BUILTIN_mult(*args):
 	return prod
 
 def BUILTIN_lt(arg1, arg2):
-	return arg1 < arg2
+	return arg1.eval() < arg2.eval()
 
 def BUILTIN_if(predicate, true_branch, false_branch):
 	if predicate.eval():
