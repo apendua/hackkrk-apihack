@@ -55,7 +55,7 @@ def functions(request, node_id=None):
 		return success(node, 201)
 	elif request.method == 'PUT' and node_id:
 		data = json.loads(request.body) # parse POST data
-		node = updateNode(node_id, data)
+		node = updateNode(node_id, **data)
 		if node:
 			return success(data)
 		else:
