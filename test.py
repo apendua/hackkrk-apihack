@@ -4,8 +4,8 @@ import json
 
 from urllib2 import urlopen
 
-#prefix = "http://127.0.0.1:8000"
-prefix = "http://hackkrk-apihack.lenarcik.org:80"
+prefix = "http://127.0.0.1:8000"
+#prefix = "http://hackkrk-apihack.lenarcik.org:80"
 
 def make_request(url, data=None):
 	if data:
@@ -28,3 +28,8 @@ id1 = make_request("/nodes", {"kind":"constant","type":"int","value":121})
 id2 = make_request("/functions/builtin/add")
 id3 = make_request("/nodes", {"kind":"invoke","function":id2,"arguments":[id0,id1]})
 make_request("/nodes/%i/evaluate" % id3)
+
+id0 = make_request("/nodes", {"kind":"constant","type":"int","value":406})
+id1 = make_request("/functions", {"body":id0})
+id2 = make_request("/nodes", {"kind":"invoke","function":id1,"arguments":[]})
+id3 = make_request("/nodes/%i/evaluate" % id2)
