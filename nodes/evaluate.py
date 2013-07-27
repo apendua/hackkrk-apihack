@@ -9,8 +9,7 @@ def evalNode(node_id, args=None):
 	if kind == 'constant':
 		return node['value']
 	elif kind == 'invoke':
-		args = [evalNode(i) for i in node['arguments']]
-		return evalNode(node['function'], args)
+		return evalNode(node['function'], [evalNode(i, args) for i in node['arguments']])
 	elif kind == 'argument':
 		#TODO: check if arguments are ok
 		return args['argument']
@@ -19,8 +18,8 @@ def evalNode(node_id, args=None):
 	elif kind == 'function':
 		return evalNode(node['body'], args)
 	elif kind == 'if':
-		if evalNode(node['predicate']):
-			return evalNode(node['true_branch'])
-		return evalNode(node['false_branch'])
+		if evalNode(node['predicate'], args):
+			return evalNode(node['true_branch'], args)
+		return evalNode(node['false_branch'], args)
 	return None
 	
