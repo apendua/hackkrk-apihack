@@ -37,8 +37,8 @@ def builtin(request, name):
 	if request.method == 'GET':
 		if not name in cache:
 			cache[name] = addNode({
-					'kind': 'function',
-					'body': name,
+					'kind' : 'builtin',
+					'name' : name,
 				})
 		return success({"id": cache[name]})
 	return error()
@@ -50,7 +50,9 @@ def functions(request, node_id=None):
 		err = validate.validateNode(node)
 		if err:
 			return error(err, 422)
-		return success({'id':addNode(node)}, 201)
+		node['id'] = addNode(node)
+		del node['kind']
+		return success(node, 201)
 	return error()
 
 # EVALUATE

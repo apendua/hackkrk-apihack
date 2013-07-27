@@ -14,11 +14,10 @@ def evalNode(node_id, args=None):
 	elif kind == 'argument':
 		#TODO: check if arguments are ok
 		return args['argument']
+	elif kind == 'builtin':
+		return getattr(builtins, node['name']).__call__(*args)
 	elif kind == 'function':
-		if hasattr(builtins, node['body']):
-			return getattr(builtins, node['body']).__call__(*args)
-		else:
-			return evalNode(node['body'], args)
+		return evalNode(node['body'], args)
 	elif kind == 'if':
 		if evalNode(node['predicate']):
 			return evalNode(node['true_branch'])
