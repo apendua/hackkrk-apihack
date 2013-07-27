@@ -12,7 +12,7 @@ def evalNode(node_id, args=None):
 		return evalNode(node['function'], [evalNode(i, args) for i in node['arguments']])
 	elif kind == 'argument':
 		#TODO: check if arguments are ok
-		return args['argument']
+		return args[node['argument']]
 	elif kind == 'builtin':
 		return library[node['name']].__call__(*args)
 	elif kind == 'function':
