@@ -57,7 +57,7 @@ def functions(request, node_id=None):
 		data = json.loads(request.body) # parse POST data
 		node = updateNode(node_id, **data)
 		if node:
-			return success(data)
+			return success(data, 201)
 		else:
 			error("")
 	return error("")
