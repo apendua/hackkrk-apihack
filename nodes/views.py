@@ -3,7 +3,7 @@ import builtins
 import json
 
 from nodes.models import addNode, getNode, updateNode
-from nodes.evaluate import evalNode
+from nodes.evaluate import evalNode, evalType
 from nodes.helpers import error, success
 
 cache = {}
@@ -16,6 +16,12 @@ def nodes(request, node_id=None):
 		err = validate.validateNode(node)
 		if err:
 			return error(err, 422)
+		try:
+			nodeType = evalType(node)
+		except TypeError:
+			return error("Type mismatch", 422)
+		if nodeType: # can be None
+			node["type"] = nodeType
 		node["id"] = addNode(node)
 		return success(node, 201)
 	elif request.method == 'GET' and node_id:
@@ -54,6 +60,7 @@ def functions(request, node_id=None):
 		del node['kind']
 		return success(node, 201)
 	elif request.method == 'PUT' and node_id:
+		#TODO: also update node type
 		data = json.loads(request.body) # parse POST data
 		node = updateNode(node_id, **data)
 		if node:

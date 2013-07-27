@@ -27,3 +27,9 @@ def updateNode(node_id, **kwargs):
 	node.json = json.dumps(data)
 	node.save()
 	return data
+
+def updateType(nodeId, nodeType=None):
+	if nodeType:
+		print "type of node", nodeId, "is", nodeType
+		updateNode(nodeId, type=nodeType) # nodeId can be none
+	return nodeType

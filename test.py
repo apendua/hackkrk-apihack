@@ -15,7 +15,7 @@ def make_request(url, data=None):
 
 	result = json.loads(response.read().decode('utf-8'))
 	
-	print url
+	print url, data or ""
 	print response.code, result
 
 	try:
