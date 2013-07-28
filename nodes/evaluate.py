@@ -62,7 +62,9 @@ def evalType(node, args=None):
 	else:
 		raise ValueError
 	# we need this to prevent infinite loop
-	store(nodeId, None)
+	if node['kind'] != 'function' and node['kind'] != 'builtin':
+		#TODO: check if this logic is correct
+		store(nodeId, None)
 	#print "computing type of node:", node
 	# try easy solution ;)
 	if 'type' in node: # check if type is given explicitly
@@ -79,6 +81,20 @@ def evalType(node, args=None):
 			return store(nodeId, 'int')
 		elif funcName == 'lt':
 			return store(nodeId, 'bool')
+		elif funcName == 'if':
+			if args and len(args) == 3:
+				predicate = args[1].evalType()
+				if predicate == 'bool':
+					typeTrue  = args[1].evalType()
+					typeFalse = args[2].evalType()
+					# it's ok if one of them is undefined, hmm?
+					if typeTrue and typeFalse and typeTrue != typeFalse:
+						raise TypeError("Type mismatch")
+					return typeTrue # I'm not sure if we should cache this one
+				else:
+					raise TypeError("Type mismatch")
+			else:
+				raise ValueError() # wrong number of arguments
 		#TODO: if
 	elif kind == 'function':
 		if node['body']: # this can be null
