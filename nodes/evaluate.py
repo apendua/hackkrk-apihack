@@ -94,7 +94,7 @@ def evalType(node, args=None):
 			typeTrue  = evalType(node['true_branch'], args)
 			typeFalse = evalType(node['false_branch'], args)
 			# it's ok if one of them is undefined, hmm?
-			if typeTrue && typeFalse && typeTrue != typeFalse:
+			if typeTrue and typeFalse and typeTrue != typeFalse:
 				raise TypeError("Type mismatch")
 		else:
 			raise TypeError("Type mismatch")

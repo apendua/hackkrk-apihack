@@ -4,8 +4,8 @@ import json
 
 from urllib2 import urlopen, HTTPError
 
-#prefix = "http://127.0.0.1:8000"
-prefix = "http://hackkrk-apihack.lenarcik.org:80"
+prefix = "http://127.0.0.1:8000"
+#prefix = "http://hackkrk-apihack.lenarcik.org:80"
 
 def request(url, data=None):
 	try:
