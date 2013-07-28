@@ -89,9 +89,14 @@ def evalType(node, args=None):
 			return args[node['argument']].evalType()
 		return None
 	elif kind == 'if':
-		typeTrue  = evalType(node['true_branch'], args)
-		typeFalse = evalType(node['false_branch'], args)
-		if typeTrue != typeFalse:
+		predicate = evalType(node['predicate'])
+		if predicate == 'bool':
+			typeTrue  = evalType(node['true_branch'], args)
+			typeFalse = evalType(node['false_branch'], args)
+			# it's ok if one of them is undefined, hmm?
+			if typeTrue && typeFalse && typeTrue != typeFalse:
+				raise TypeError("Type mismatch")
+		else:
 			raise TypeError("Type mismatch")
 		return store(nodeId, typeTrue)
 
