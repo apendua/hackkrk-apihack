@@ -61,7 +61,9 @@ def evalType(node, args=None):
 		nodeId = node.get('id', None)
 	else:
 		raise ValueError
-	print "computing type of node:", node
+	# we need this to prevent infinite loop
+	store(nodeId, None)
+	#print "computing type of node:", node
 	# try easy solution ;)
 	if 'type' in node: # check if type is given explicitly
 		return store(nodeId, node['type']) # also kind == constant goes here
