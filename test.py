@@ -48,6 +48,7 @@ id0 = request("/nodes", {"kind":"constant","type":"bool","value":True})
 id1 = request("/nodes", {"kind":"constant","type":"string","value":"ZCBCWOVT"})
 id2 = request("/nodes", {"kind":"constant","type":"int","value":682})
 id3 = request("/nodes", {"kind":"if","predicate":id0,"true_branch":id1,"false_branch":id2})
+id3 = request("/nodes", {"kind":"if","predicate":id1,"true_branch":id1,"false_branch":id2})
 
 # function returning sum of arguments
 
