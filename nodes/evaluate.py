@@ -83,7 +83,7 @@ def evalType(node, args=None):
 			return store(nodeId, 'bool')
 		elif funcName == 'if':
 			if args and len(args) == 3:
-				predicate = args[1].evalType()
+				predicate = args[0].evalType()
 				if predicate == 'bool':
 					typeTrue  = args[1].evalType()
 					typeFalse = args[2].evalType()
