@@ -11,8 +11,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',     # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': '/app/db/hackkrk-apihack.db', # Or path to database file if using sqlite3.
+        #XXX please remember that the processs requires write access to the directory containind db file
+
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
